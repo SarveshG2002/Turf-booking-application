@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0px;
+        }
+
+        .box {
+            width: 85%;
+            padding: 10px;
+            background-color: antiquewhite;
+            margin: 10px auto;
+            box-shadow: 0px 5px 10px 0px rgba(128, 128, 128, 0.5);
+        }
+
+        .time {
+            padding: 10px;
+            font-size: 25px;
+        }
+
+        .payment {
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 20px;
+        }
+
+        .payment_details {
+            width: 90%;
+            padding: 10px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="tdetails"
+        style="font-size: 20px;margin: 20px 0px 0px 20px; background-color: rgb(183, 129, 233);padding: 10px; width: fit-content;"
+        onclick="$('#mainContainer').load('user')">
+        Back
+    </div>
+    <div class="box">
+        <div class="time">
+            <div style="color: green;">
+                <u> Booking Slot</u>
+            </div><br>
+            <label for="date" style="font-size: 20px;"> Select Date : </label>
+            <input type="date" style="margin-left: 10px;" id="date"><br><br>
+            <label for="stime" style="font-size: 20px;"> Entry time : </label>
+            <input type="time" style="margin-left: 10px;" id="stime" oninput="calc()"><br><br>
+            <div style="display: block;" id="lala">
+                <label for="etime" style="font-size: 20px;"> Leave time : </label>
+                <input type="time" style="margin-left: 10px;" id="etime" oninput="calc()">
+            </div>
+            <div id="amount">
+
+            </div>
+            <div class="err" style="color: red; font-size: 20px;" id="err">
+
+            </div>
+        </div>
+        <div class="payment">
+            <div style="color: green;font-size: 25px;">
+                <u> Payment Details</u>
+            </div><br>
+            <input type="radio" id="html" name="fav_language" value="HTML">
+            <label for="html">Cash on entry</label><br>
+            <input type="radio" id="css" name="fav_language" value="CSS" onchange="show_payment_details()">
+            <label for="css">Online registration</label><br>
+        </div>
+        <div class="payment_details" id="payment_details">
+            Do payment on following number and click on Apply. Turf owner will accept your payment After verification.
+            <div class="gpay" style="padding: 10px;font-size: 20px;" id="gpay">
+
+            </div>
+            <div class="phonepay" style="padding: 10px;font-size: 20px;" id="phonepe">
+
+            </div>
+            <div class="paytm" style="padding: 10px;font-size: 20px;" id="paytm">
+
+            </div>
+            <div>
+                <label for="tpname">Enter name of person whose transaction id has used: </label>
+                <input type="text" name="tpname" placeholder="Enter name of person" id="tpname">
+            </div>
+        </div>
+        <div class="book"
+            style="width: 100px;background-color: rgb(93, 93, 253);padding: 5px;border-radius: 10px;color: #ffffff;text-align: center;margin: 10px auto;"
+            onclick="apply()">
+            Apply
+        </div>
+
+    </div>
+    <script>
+        function calc() {
+            // console.log("vadapav")
+            let stime = document.getElementById("stime").value
+            let etime = document.getElementById("etime").value
+            // console.log(stime, etime)
+            // console.log(stime=="")
+            // console.log(etime=="")
+            // console.log(stime == "" && etime == "")
+            if (stime == "" || etime == "") {
+
+            }
+            else {
+                stime = new Date("1970-01-01T" + stime + ":00Z");
+                etime = new Date("1970-01-01T" + etime + ":00Z");
+                let diffMs = etime - stime;
+                let diffMin = diffMs / 60000;
+                //let ratePerHour = turf_bdata[7]
+                let ratePerHour = 1000
+                let ratePerMin = ratePerHour / 60
+                let payble = ratePerMin * diffMin
+                if (payble < 0) {
+                    document.getElementById("err").innerHTML = "Entry time is not propper"
+                }
+                else {
+                    document.getElementById("err").innerHTML = ""
+                    document.getElementById("amount").innerHTML = "payble amount: " + ratePerMin * diffMin
+                }
+            }
+
+
+        }
+        function show_payment_details() {
+            let a = check_cred("/get_payment_details", { mail: turf_bdata[2] })
+            a.then(data => {
+                console.log(data)
+                data = JSON.parse(data)["ret"]
+                document.getElementById("payment_details").style.display = "block"
+                document.getElementById("gpay").innerHTML = "Gpay number: " + data[0][0]
+                document.getElementById("phonepe").innerHTML = "phonepe number: " + data[0][1]
+                document.getElementById("paytm").innerHTML = "paytm number: " + data[0][2]
+            }).catch((err) => {
+
+            });
+        }
+        function check_valid(stime, etime, date) {
+            date = date.split("-")
+            stime = stime.split(":")
+            etime = etime.split(":")
+            stime = new Date(date[0], date[1], date[2], [2], stime[0], stime[1]); // year, month (0-based), day, hour, minute
+            etime = new Date(date[0], date[1], date[2], [2], etime[0], etime[1]);
+            return stime.getTime() < etime.getTime()
+        }
+
+        function check_valid_date_time(date, stime, etime) {
+            date = new Date(date)
+            date = date.toLocaleDateString().split("/")
+            console.log("selected: ",date)
+            sm = parseInt(date[0])
+            sy = parseInt(date[2])
+            sd = parseInt(date[1])
+            //console.log("selected: ",sm,sy,sd)
+            let today = new Date()
+            today = today.toLocaleDateString().split("/")
+            //console.log("today: ",today)
+            tm = parseInt(today[0])
+            ty = parseInt(today[2])
+            td = parseInt(today[1])
+            //console.log("today: ",tm,ty,td)
+            if (ty == sy) {
+                if (tm == sm) {
+                    if (td == sd) {
+                        console.log("today")
+                        let time = new Date()
+                        let hours = time.getHours()
+                        let min = time.getMinutes()
+                        //console.log("current:", hours + ":" + min)
+                        stime = stime.split(":")
+                        //etime=etime.split(":")
+                        let sshour = stime[0]
+                        let ssmin = stime[1]
+                        //let sehour=etime[0]
+                        //let semin=etime[1]
+                        //console.log("start time:", sshour + ":" + ssmin)
+                        //console.log("exit time:",sehour+":"+semin)
+                        if (sshour < hours) {
+                            return false
+                        }
+                        else if (sshour == hours) {
+                            if (ssmin < min) {
+                                return false
+                            }
+                            else if (ssmin == min) {
+                                return false
+                            }
+                            else {
+                                return true
+                            }
+                        }
+                        else {
+                            return true
+                        }
+                    }
+                    else if (td < sd) {
+                        return true
+                    }
+                    else if (td > sd) {
+                        // console.log("past")
+                        return false
+                    }
+                }
+                else if (tm < sm) {
+                    // console.log("future month")
+                    return true
+                }
+                else if (tm > sm) {
+                    // console.log("past month")
+                    return false
+                }
+            }
+        }
+
+        function apply() {
+            let date = document.getElementById("date").value
+            let stime = document.getElementById("stime").value
+            let etime = document.getElementById("etime").value
+            let tpname = document.getElementById("tpname").value
+            if (date == "" || stime == "" || etime == "") {
+                alert("please fill all data")
+            }
+            else if (check_valid(stime, etime, date)) {
+                if (check_valid_date_time(date, stime, etime)) {
+                    console.log("it valid slot")
+                    date = date.split("-")
+                    let send_data = { tname: turf_bdata[0], game: turf_bdata[1], omail: turf_bdata[2], umail: user_mdata["mail"], city: turf_bdata[6], rate: document.getElementById("amount").innerHTML.split(": ")[1], year: date[0], month: date[1], day: date[2], stime: stime, etime: etime, tpname: tpname }
+                    console.log(send_data)
+                    let a = check_cred("apply_for_turf", send_data)
+                    a.then(data => {
+                        console.log(data)
+                        if (data == "done") {
+                            $("#mainContainer").load("user")
+                        }
+                        else if (data = "exists") {
+                            document.getElementById("err").innerHTML = "This slot is allready booked"
+                        }
+                    })
+
+                }
+                else {
+                    document.getElementById("err").innerHTML = "Date or time is not valid"
+                }
+            }
+            else {
+                document.getElementById("err").innerHTML = "Date or time is not valid"
+            }
+
+        }
+    </script>
+</body>
+
+</html>

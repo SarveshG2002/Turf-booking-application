@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0px;
+        }
+
+        .box {
+            width: 85%;
+            padding: 10px;
+            background-color: antiquewhite;
+            margin: 20px auto;
+            box-shadow: 0px 5px 10px 0px rgba(128, 128, 128, 0.5);
+        }
+
+        input {
+            border-width: 0px 0px 1px 0px;
+            width: 100%;
+            background: none;
+        }
+
+        .but {
+            background-color: blueviolet;
+            width: fit-content;
+            padding: 5px;
+            margin: 20px auto;
+            color: aliceblue;
+            font-size: 20px;
+        }
+
+        .but:active {
+            background-color: aliceblue;
+            color: blueviolet;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div style="font-size: 20px;text-align: center;margin-top: 40px;">
+            Payments Details
+        </div>
+        <div class="box">
+            <div style="margin-top: 30px;">
+                <Label>Enter your Google pay number</Label><br>
+                <input type="text" placeholder="Enter here" style="margin-top: 10px;" id="gpay">
+            </div>
+            <div style="margin-top: 30px;">
+                <Label>Enter your phonepe number</Label><br>
+                <input type="text" placeholder="Enter here" style="margin-top: 10px;" id="phonepe">
+            </div>
+            <div style="margin-top: 30px;">
+                <Label>Enter your Pyatm number</Label><br>
+                <input type="text" placeholder="Enter here" style="margin-top: 10px;" id="paytm">
+            </div>
+            <div style="margin-top: 30px;">
+                <Label>Enter your IFSC code</Label><br>
+                <input type="text" placeholder="Enter here" style="margin-top: 10px;" id="ifsc">
+            </div>
+            <div style="margin-top: 30px;">
+                <Label>Enter your bank account number</Label><br>
+                <input type="text" placeholder="Enter here" style="margin-top: 10px;" id="account">
+            </div>
+            <div style="margin-top: 20px;text-align: center;color: red;font-size: 15px;display: none;" id="error">
+                Plese fill all data
+            </div>
+            <div class="but" onclick="submit()">
+                Submit
+            </div>
+
+        </div>
+    </div>
+    <script>
+
+        function submit() {
+            let gpay = document.getElementById("gpay").value
+            let phonepe = document.getElementById("phonepe").value
+            let paytm = document.getElementById("paytm").value
+            let ifsc = document.getElementById("ifsc").value
+            let account = document.getElementById("account").value
+            if (gpay == "" || phonepe == "" || paytm == "" || ifsc == "" || account == "") {
+                document.getElementById("error").style.display = "block"
+            }
+            else {
+                signup_data["gpay"] = gpay
+                signup_data["phonepe"] = phonepe
+                signup_data["paytm"] = paytm
+                signup_data["ifsc"] = ifsc
+                signup_data["account"] = account
+                console.log(signup_data)
+                let a=check_cred("signup_owner",signup_data)
+                a.then((result) => {
+                    $("#mainContainer").load("owner_page")
+                }).catch((err) => {
+                    console.log(err)
+                });
+            }
+
+
+        }
+    </script>
+</body>
+
+</html>

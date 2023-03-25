@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<style>
+    body {
+        margin: 0px;
+    }
+
+    .loginbox {
+        padding: 20px;
+        width: 90%;
+        margin: 150px auto;
+    }
+
+    .cir {
+        display: inline;
+    }
+
+    .cir1 {
+        width: 30%;
+        padding: 25% 30%;
+        background-color: rgb(122, 255, 113);
+        border-radius: 50%;
+        margin-top: -100px;
+    }
+
+    .cir2 {
+        position: absolute;
+        z-index: 1;
+        width: 30%;
+        padding: 40% 25%;
+        background-color: rgb(48, 152, 48);
+        border-radius: 50%;
+        margin-top: -100px;
+        margin-left: -100px;
+    }
+
+    .loginbox input {
+        font-size: 22px;
+        width: 90%;
+        margin: 15px auto;
+        border-radius: 10px;
+        padding: 10px;
+        border-width: 0px 0px 1px 0px;
+        border-color: black;
+    }
+
+    .loginbox input:hover {
+        background-color: #abffaf;
+    }
+
+    .img img {
+        width: 50%;
+    }
+
+    .sub {
+        width: 50%;
+        padding: 5px;
+        background-color: #1b5e20;
+        margin: 20px auto;
+        font-size: 30px;
+        text-align: center;
+        border-radius: 20px;
+    }
+
+    .sub:active {
+        background-color: #43a047;
+    }
+
+    .rad_box input {
+        width: 10%;
+        border: 0px;
+        height: 1em;
+        margin-bottom: 0px;
+    }
+</style>
+
+<body>
+    <div class="main">
+        <div class="cir1 cir">
+
+        </div>
+        <div class="cir2 cir">
+
+        </div>
+        <div class="loginbox">
+            <div class="create"
+                style="font-size: 40px;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
+                Create Account
+            </div>
+            <input type="text" placeholder="Name" id="name">
+            <input type="text" name="" id="email" placeholder="Email">
+            <input type="text" placeholder="Mobile" id="mobile">
+            <input type="text" placeholder="Password" id="pass">
+            <input type="text" placeholder="Confirm Password" id="cpass">
+            <div class="rad_box">
+                <input type="radio" id="use1" name="usecase" value="user" class="rad">
+                <label for="age1"
+                    style="font-size: 30px;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">I'm
+                    owner</label><br>
+                <input type="radio" id="use2" name="usecase" value="owner" class="rad">
+                <label for="age2"
+                    style="font-size: 30px;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">I'm
+                    user</label><br>
+            </div>
+            <div class="alert" style="display: none; text-align: center; color: red;margin-top: 10px;" id="alert">
+            </div>
+            <div class="sub" onclick="check()">
+                Submit
+            </div>
+        </div>
+    </div>
+    <script>
+        var signup_data;
+        function check(){
+            let name = document.getElementById("name").value;
+            let email = document.getElementById("email").value;
+            let mobile = document.getElementById("mobile").value;
+            let pass = document.getElementById("pass").value;
+            let cpass = document.getElementById("cpass").value;
+            let ele = document.getElementsByName("usecase");
+            let user = ""
+            signup_data={name:name,email:email,mobile:mobile,pass:pass}
+            if (name == "" || email == "" || mobile == "" || pass == "" || cpass == "") {
+                document.getElementById("alert").style.display = "block";
+                document.getElementById("alert").innerText = "Please enter above information";
+            }
+            else if (ele[0].checked) {
+                console.log("owner")
+                user = "owner"
+                $("#mainContainer").load('bank_details')
+            }
+            else if (ele[1].checked) {
+                console.log("user")
+                user = "users"
+                submit()
+            }
+        }
+        function submit() {
+            let name = document.getElementById("name").value;
+            let email = document.getElementById("email").value;
+            let mobile = document.getElementById("mobile").value;
+            let pass = document.getElementById("pass").value;
+            let cpass = document.getElementById("cpass").value;
+            let ele = document.getElementsByName("usecase");
+            let user = ""
+            console.log(ele)
+            if (ele[0].checked) {
+                console.log("owner")
+                user = "owner"
+            }
+            else if (ele[1].checked) {
+                console.log("user")
+                user = "users"
+            }
+            else {
+                document.getElementById("alert").style.display = "block";
+                document.getElementById("alert").innerText = "Please select your post";
+            }
+            if (name == "" || email == "" || mobile == "" || pass == "" || cpass == "") {
+                document.getElementById("alert").style.display = "block";
+                document.getElementById("alert").innerText = "Please enter above information";
+            }
+            else {
+                if (user != "") {
+                    let a = check_cred("/signup/", { name: name, mail: email, mobile: mobile, pass: pass, cpass: cpass, user: user })
+                    a.then(data => {
+                        console.log(data)
+                        if (data == "exists") {
+                            alert("This id is allready exists")
+                        }
+                        else {
+                            console.log(user)
+                            if (user == "owner") {
+                                let site = "owner_page";
+                                $("#mainContainer").load(site)
+                                console.log("site loaded......")
+                            }
+                            else if (user == "users") {
+                                let site = "user";
+                                user_mdata={ name: name, mail: email, mobile: mobile, user: user }
+                                //window.location.href = `${window.origin}/` + site + `/`;
+                                $("#mainContainer").load(site)
+                            }
+                        }
+                        
+                    })
+                }
+
+
+            }
+            //<img src="{{ url_for('static',filename='5087579.png') }}">
+        }
+        
+    </script>
+</body>
+
+</html>

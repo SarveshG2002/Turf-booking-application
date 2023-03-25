@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0px;
+        }
+
+        .header {
+            background-color: #2874F0;
+
+        }
+
+        .search {
+            width: 90%;
+            display: grid;
+            grid-template-columns: 20% 60% 20%;
+            box-sizing: border-box;
+            padding: 10px;
+
+        }
+
+        .turfs {
+            clear: both;
+            padding: 10px;
+            margin-top: 10px;
+            display: grid;
+            column-gap: 15%;
+            grid-template-columns: 40% 40%;
+
+        }
+
+        .turf {
+            background-color: #e2edff;
+            margin-top: 10px;
+            padding: 10px 10px;
+            width: 100%;
+        }
+
+        .tname {
+            font-size: 25px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="search">
+            <div style="width: fit-content; margin: 0px auto;padding: 5px; box-sizing: border-box;background-color: #ea77ea;" onclick="$('#mainContainer').load('user')">
+                Back
+            </div>
+            <input type="search" placeholder="search" style="font-size: 20px;">
+            <button style="margin: 0px auto; font-size: 18px;">Search</button>
+        </div>
+    </div>
+    <div class="turfs" id="turfs">
+        <div class="turf">
+            <div class="tname">
+                Turf name
+            </div>
+            <div class="trate">
+                Rate: 100$
+            </div>
+            <div class="taddr">
+                Old dombivli road,Dombivli west,Dombivli
+            </div>
+        </div>
+        <div class="turf">
+            <div class="tname">
+                Turf name
+            </div>
+            <div class="trate">
+                Rate: 100$
+            </div>
+            <div class="taddr">
+                Old dombivli road,Dombivli west,Dombivli
+            </div>
+        </div>
+    </div>
+    <script>
+        console.log(search_q)
+        console.log(query)
+        search_q = search_q["ret"]
+        if (search_q.length == 0) {
+            document.getElementById("turfs").innerHTML = "Data not found"
+        }
+        else {
+            let markup = ""
+            for (let i = 0; i < search_q.length; i++) {
+                markup = markup + "<div class='turf' onclick='book_panel("+i+")'><div class='tname' style='color: blue'>" + search_q[i][0] + "</div><div class='trate'>Rate: " + search_q[i][7] + "Rupee</div><div class='taddr'>" + search_q[i][6] + "," + search_q[i][5] + "," + search_q[i][7] + "</div></div>"
+            }
+            document.getElementById("turfs").innerHTML = markup
+        }
+        function book_panel(i){
+            console.log(search_q[i])
+            turf_bdata=search_q[i]
+            $("#mainContainer").load("bookingPage")
+        }
+    </script>
+</body>
+
+</html>

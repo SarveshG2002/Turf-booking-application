@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        var user_mdata;
+        var search_q;
+        var turf_bdata
+        var query;
+        let deleted_temp;
+        let turfs;
+        let index="slide1";
+        let toggle = 0;
+        let name;
+        let price;
+        let addr;
+        let markup;
+        var request_data;
+        var user_orders={requested:"",booked:"",rejected:"",rate:"",dates:""}
+        var markerLat;
+        var markerLng;
+        
+        $(document).ready(function () {
+            $("#mainContainer").load("loginPage")
+        })
+        async function check_cred(site, entry) {
+            site = `${window.origin}/` + site + `/`;
+            const response = await fetch(site, { method: "POST", credentials: "include", body: JSON.stringify(entry), cache: "no-cache", headers: new Headers({ "content-type": "application/json" }) });
+            const user = await response.text();
+            return user;
+        }
+    </script>
+</head>
+<body>
+    <div class="mainContainer" id="mainContainer">
+
+    </div>
+</body>
+</html>

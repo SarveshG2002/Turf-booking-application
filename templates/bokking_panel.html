@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+        integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+        crossorigin="anonymous" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+
+
+    <style>
+        body {
+            background-color: antiquewhite;
+            margin: 0px;
+            width: 100%;
+        }
+
+        .header {
+            background-color: #2874F0;
+            width: 100%;
+            padding: 10px 0px;
+            display: grid;
+            grid-template-columns: 20% auto 20%;
+        }
+
+        .image_box {
+            width: 90%;
+            height: 300px;
+            background-color: #ffffff;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+        }
+
+        .image_box img {
+            width: 100%;
+            border-radius: 20px;
+        }
+
+        .fa-heart {
+            color: rgb(255, 255, 255);
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        .info {
+            background-color: burlywood;
+            width: 90%;
+            padding: 10px 0px;
+            margin: 0px auto;
+            padding-left: 15px;
+            box-sizing: border-box;
+        }
+
+        .turfName {
+            font-size: 40px;
+            color: blue;
+        }
+
+        .turfRate {
+            font-size: 30px;
+        }
+
+        .turfAddr {
+            font-size: 20px;
+            width: 100%;
+            padding: 10px 0px;
+        }
+
+        .book {
+            background-color: #2874F0;
+            width: fit-content;
+            padding: 10px;
+            font-size: 20px;
+            border-radius: 10px;
+            margin: 20px auto;
+        }
+
+
+
+
+
+
+        .hot {
+            width: 100%;
+            background-color: rgb(198, 249, 167);
+            font-size: 15px;
+        }
+
+        .hots {
+            font-size: 20px;
+            margin-left: 10px;
+            display: grid;
+            grid-template-columns: 10% auto;
+        }
+
+        .hots img {
+            width: 100%;
+        }
+
+        .hots div {
+            margin-left: 5px;
+            margin-top: 5px;
+        }
+
+        .may {
+            display: flex;
+            overflow: auto;
+            background-color: red;
+        }
+
+        .mcard {
+            width: 40%;
+            display: inline-block;
+            background-color: none;
+            padding-left: 30px;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <!--
+    <div class="header">
+        <i class="fa fa-heart" id="heart-icon" onclick="toggleHeart()"></i>
+    </div>
+    -->
+    <!-- <div class="ss" style="width: 100%;background-color: #2874F0;box-sizing: border-box;height: 100px;">
+
+        
+        <div class="image_box">
+
+        </div>
+
+    </div> -->
+
+    <div class="header">
+        <div class="back" onclick="back()">
+            <span class="material-symbols-outlined" style="font-size: 35px;">arrow_back</span>
+        </div>
+        <div class="search_icon">
+            <span class="material-symbols-outlined"
+                style="margin-top: 0px; background-color: aliceblue;border-radius: 20px;display: block;width: fit-content;float: right;font-size: 35px;">
+                search
+            </span>
+        </div>
+        <div class="fev"><i class="fa fa-heart" id="heart-icon" onclick="toggleHeart()"
+                style="margin-top: 0px;float: right;margin-right: 15px;font-size: 35px;"></i></div>
+    </div>
+
+    <div class="image_box">
+        <center>
+            <img src="" alt="" id="turfimage">
+        </center>
+
+    </div>
+    <div class="info" id="info">
+        <div class="turfName">
+            Turf name
+        </div>
+        <div class="turfRate">
+            100$
+        </div>
+        <div class="turfAddr">
+            Dombivli,Dombivli road
+        </div>
+    </div>
+    <div class="book" onclick="$('#mainContainer').load('get_booking')">
+        BOOK
+    </div>
+    <div class="hot" style="background-color: #f2f2f2;">
+        <div class="hots">
+            <div>
+                Suggetions
+            </div>
+        </div>
+        <div class="may" style="background-color: #ffffff;">
+
+            <div class="cricket mcard">
+                <!-- <img src="{{ url_for('static',filename='badminton.jpg') }}" alt="" style="width: 100%;"> -->
+                <img src="/static/badminton.jpg" alt="" style="width: 100%;">
+                <div style="text-align: center;width: 100%;">Badminton</div>
+            </div>
+            <div class="Football mcard">
+                <!-- <img src="{{ url_for('static',filename='hockey.jpg') }}" alt="" style="width: 100%;"> -->
+                <img src="/static/hockey.jpg" alt="" style="width: 100%;">
+                <div style="text-align: center;width: 100%;">Hockey</div>
+            </div>
+            <div class="Football mcard">
+                <!-- <img src="{{ url_for('static',filename='basketball.webp') }}" alt="" style="width: 100%";> -->
+                <img src="/static/basketball.webp" alt="" style="width: 100%;">
+                <div style="text-align: center;width: 100%;">Basketball</div>
+            </div>
+            <div class="Football mcard">
+                <!-- <img src="{{ url_for('static',filename='dodgeball.jpg') }}" alt="" style="width: 100%;"> -->
+                <img src="/static/dodgeball.jpg" alt="" style="width: 100%;">
+                <div style="text-align: center;width: 100%;">Dodgeball</div>
+            </div>
+            <div class="Football mcard">
+                <!-- <img src="{{ url_for('static',filename='golf.jpg') }}" alt="" style="width: 100%;"> -->
+                <img src="/static/dodgeball.jpg" alt="" style="width: 100%;">
+                <div style="text-align: center;width: 100%;">Dodgeball</div>
+            </div>
+
+        </div>
+    </div>
+    <script>
+        function back() {
+            console.log(query)
+            qSearch(query)
+        }
+        function toggleHeart() {
+            let heartIcon = document.getElementById("heart-icon");
+            if (toggle == 0) {
+                heartIcon.style.color = "red"
+                toggle = 1
+            }
+            else {
+                heartIcon.style.color = "white"
+                toggle = 0
+            }
+        }
+        function book() {
+            console.log("booked")
+            // let a = check_cred("book", { tdata: turf_bdata, udata: user_mdata })
+
+        }
+        function qSearch(q) {
+            query = q
+            let a = check_cred("Search_turf", { turf: q })
+            a.then(data => {
+                //console.log(data)
+                data = JSON.parse(data)
+                search_q = data
+                $("#mainContainer").load("searchPage")
+            })
+        }
+        name = turf_bdata[0]
+        price = turf_bdata[7]
+        addr = turf_bdata[6] + ", " + turf_bdata[5] + ", " + turf_bdata[7]
+        markup = "<div class='turfName'>" + name + "</div><div class='turfRate'>" + price + "</div><div class='turfAddr'>" + addr + "</div>"
+        document.getElementById("info").innerHTML = markup
+        document.getElementById("turfimage").src=turf_bdata[8]
+    </script>
+</body>
+
+</html>

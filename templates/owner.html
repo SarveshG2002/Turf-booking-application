@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<style>
+    body {
+        padding: 0px;
+        margin: 0px;
+
+    }
+
+    .header {
+        width: 100%;
+        padding: 10px;
+        background-color: black;
+        color: aliceblue;
+        font-size: 30px;
+        box-sizing: border-box;
+    }
+
+    .add {
+        width: 200px;
+        background-color: #63a3c8;
+        padding: 10px;
+        margin: 10px auto;
+        color: aliceblue;
+        font-size: 25px;
+        text-align: center;
+        border-radius: 20px;
+    }
+
+    .content {
+        width: 100%;
+        height: 550px;
+        box-sizing: border-box;
+    }
+
+    .chead {
+        width: 100%;
+        padding: 10px;
+        box-sizing: border-box;
+        border: 1px solid green;
+    }
+
+    .turfs {
+        width: 100%;
+        height: 100%;
+        border: 1px solid red;
+        
+    }
+
+    .add:active {
+        background-color: antiquewhite;
+        color: black;
+    }
+
+    .get_turf {
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        background-color: rgb(211, 254, 200);
+        z-index: 1;
+        margin-top: 200px;
+        width: 100%;
+        box-sizing: border-box;
+        display: none;
+    }
+    input{
+        margin-top: 10px;
+        font-size: 20px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }
+    .turf{
+        background-color: rgb(212, 255, 255);
+        padding: 10px;
+        width: 100%;
+        box-sizing: border-box;
+        display: grid;
+        grid-template-columns: 30% 50% auto;
+        border-width: 0px 0px 1px 0px;
+        border-style: solid;
+        border-color: aquamarine;
+    }
+    .turf_name{
+        font-size: 25px;
+        padding-left: 20px;
+    }
+    .turf_image{
+        width: 30%;
+    }
+    .turf_meta{
+        padding-left: 20px;
+        font-size: 20px;
+    }
+    .settings{
+        margin: auto;
+        font-size: 40px;
+    }
+    .bslid{
+        animation-name: fade;
+        animation-duration: 0.5s;
+    }
+    @keyframes fade{
+            from{opacity: 0%;}
+            to{opacity: 1000%;}
+    }
+
+</style>
+
+<body>
+    <div class="main">
+        <div class="header">
+            Hii, sarvesh
+        </div>
+        <div class="add" onclick="add_turf_show()">
+            <div class="bslid" id="bslid1">Add turf</div>
+            <div class="bslid" id="bslid2" style="display: none;width: 100%;"><img src="/static/ezgif.com-resize.gif" alt=""></div>
+        </div>
+        <div class="content">
+            <div class="chead">
+                <input type="text" placeholder="Search"
+                    style="font-size: 25px;width: 60%; border-width: 0px 0px 1px 0px;">
+                <img src="{{ url_for('static',filename='filter.png') }}" alt="" style="float:right; margin-top: -10px;margin-right: 10px;">
+            </div>
+            <div class="turfs" id="turfs">
+            </div>
+        </div>
+    </div>
+    <center>
+        <div class="get_turf" id="get_turf">
+            <input type="text" placeholder="Turf name" id="tname"> <br>
+            <input type="text" placeholder="Game" id="tgame"><br>
+            <input type="text" placeholder="Area" id="tarea"><br>
+            <input type="text" placeholder="Street name" id="tstreet"><br>
+            <input type="text" placeholder="city" id="tcity"><br>
+            <input type="file" id="image"><br>
+            <div class="alert" style="display: none; text-align: center; color: red;margin-top: 10px;" id="alert"></div>
+            <input type="button" value="Submit" onclick="add_turf()">
+            <input type="button" value="Close" onclick="hide_turf()">
+
+        </div>
+    </center>
+    <center>
+        <div class="get_turf" id="show_set" style="margin-top: 250px;">
+            <input type="text" placeholder="Enter hourly rate" id="rate"> <br>
+            <div class="alert" style="display: none; text-align: center; color: red;margin-top: 10px;" id="alert1"></div>
+            <input type="button" value="Update rate" onclick="update_rate()">
+            <input type="button" value="Delete Turf" onclick="del_turf()">
+            <input type="button" value="Close" onclick="hide_set()">
+        </div>
+    </center>
+    <script>
+        //user_mdata={ name: name, mail: email, mobile: mobile, user: user }
+
+        changeSlide()
+        function changeSlide(){
+            console.log(index)
+            if(index=="slide1"){
+                document.getElementById("bslid2").style.display="block";
+                document.getElementById("bslid1").style.display="none";
+                index="slide2"
+            }
+            else if(index=="slide2"){
+                document.getElementById("bslid2").style.display="none";
+                document.getElementById("bslid1").style.display="block";
+                index="slide1"
+            }
+            setTimeout(changeSlide, 5000)
+        }
+
+        //console.log(user_mdata)
+        function add_turf_show(){
+            //document.getElementById("get_turf").style.display="block";
+            $("#mainContainer").load("add_turf_page")
+        }
+        function hide_turf(){
+            document.getElementById("get_turf").style.display="none";
+            document.getElementById("alert").style.display = "none";
+            document.getElementById("alert").innerText = "";
+
+        }
+        function show_set(a){
+            document.getElementById("show_set").style.display="block";
+            deleted_temp=turfs["ret"][a];
+            
+        }
+        function hide_set(){
+            document.getElementById("show_set").style.display="none";
+            deleted_temp=null
+        }
+        function del_turf(){
+            console.log(deleted_temp)
+            let a = check_cred("/del_turf", {ret:deleted_temp})
+                a.then(data => {
+                    console.log(data)
+                    if(data=="done"){
+                        document.getElementById("show_set").style.display="none";
+                        load_turfs()
+                    }
+                    else{
+                        alert("error")
+                    }
+                })
+
+        }
+        function update_rate(){
+            console.log(deleted_temp)
+            let rate=document.getElementById("rate").value;
+            if(rate==""){
+                document.getElementById("alert").style.display = "block";
+                document.getElementById("alert").innerText = "Please insert  rate";
+            }
+            else{
+                let a = check_cred("/update_turf", {ret:deleted_temp,rate:rate})
+                a.then(data => {
+                    console.log(data)
+                    if(data=="done"){
+                        document.getElementById("show_set").style.display="none";
+                        load_turfs()
+                    }
+                    else{
+                        document.getElementById("alert").style.display = "block";
+                        document.getElementById("alert").innerText = "Something is wrong try again";
+                    }
+                })
+            }
+            
+        }
+        function add_turf(){
+            let turf_name=document.getElementById("tname").value;
+            let game=document.getElementById("tgame").value;
+            let area=document.getElementById("tarea").value;
+            let street=document.getElementById("tstreet").value;
+            let city=document.getElementById("tcity").value;
+            console.log("add_turf")
+            if(turf_name=="" || game=="" || area=="" || street=="" || city==""){
+                document.getElementById("alert").style.display = "block";
+                document.getElementById("alert").innerText = "Please fill all data";
+            }
+            else{
+                console.log("inside else")
+                let a = check_cred("/admin", { turf_name: turf_name, game:game , area: area, street: street, city: city, user: user_mdata })
+                a.then(data => {
+                    console.log(data)
+                    if(data=="done"){
+                        document.getElementById("get_turf").style.display="none";
+                        load_turfs()
+                    }
+                    else{
+                        document.getElementById("alert").innerText = "Something is wrong try again";
+                    }
+                })
+            }
+        }
+        function load_turfs(){
+            //user_mdata={ name: name, mail: email, mobile: mobile, user: user }
+            console.log({mail: user_mdata["mail"],mobile:user_mdata["mobile"]})
+            let a = check_cred("/get_turf", {mail: user_mdata["name"][1],mobile:user_mdata["name"][2]})
+                a.then(data => {
+                    
+                    data=JSON.parse(data)
+                    //alert(data["ret"])
+                    console.log(data)
+                    turfs=data
+                    let address;
+                    let markup="";
+                    for(let i=0;i<data["ret"].length;i++){
+                        address=data["ret"][i][5]+", "+data["ret"][i][6]+", "+data["ret"][i][7]
+                        //console.log(address)
+                        //"<div class='turf'><div class='turf_iamge'><img src='{{ url_for('static',filename='turf.jpg') }}' style='width: 100%;'></div><div class='turf_data'><div class='turf_name'>"+data["ret"][i][0]+"</div><div class='turf_meta'><p style='font-size: 15px'>"+address+"</p></div></div><div class='settings'>>>></div></div>"
+                        markup=markup+"<div class='turf'><div class='turf_iamge'><img src='{{ url_for('static',filename='turf.jpg') }}' style='width: 100%;'></div><div class='turf_data'><div class='turf_name'>"+data["ret"][i][0]+"</div><div class='turf_meta'><p style='margin: 5px;font-size: 15px;'>Rate: "+data["ret"][i][8]+"$/Hour</p></div></div><div class='settings'><img src='{{ url_for('static',filename='more.png') }}' style='width: 100%' onclick='show_set("+i+")'></div></div>"
+
+                    }
+                    document.getElementById("turfs").innerHTML=markup;
+                })
+        }
+        load_turfs()
+    </script>
+</body>
+
+</html>

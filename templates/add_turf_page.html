@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0px;
+        }
+
+        .box {
+            width: 85%;
+            padding: 10px;
+            background-color: antiquewhite;
+            margin: 20px auto;
+            box-shadow: 0px 5px 10px 0px rgba(128, 128, 128, 0.5);
+        }
+
+        input {
+            border-width: 0px 0px 1px 0px;
+            width: 60%;
+            background: none;
+            margin: 20px auto 0px auto;
+        }
+
+        input:hover {
+            width: 80%;
+        }
+
+        .title {
+            text-align: center;
+            margin: 30px 0px;
+            font-size: 25px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="title">
+        Turf Details
+    </div>
+    <div class="box">
+        <center>
+            <input type="text" placeholder="Turf name" id="tname"> <br>
+            <input type="text" placeholder="Turf Game" id="tgame"><br>
+            <input type="text" placeholder="Area where turf located" id="tarea"><br>
+            <input type="text" placeholder="Street name" id="tstreet"><br>
+            <input type="text" placeholder="city of turf" id="tcity"><br>
+            <input type="number" placeholder="hourly rate" id="trate"><br><br>
+            <label for="image" style="color: grey;">upload photo of image</label>
+            <input type="file" id="image" style="margin-top: 10px;"><br>
+            <div class="alert" style="display: none; text-align: center; color: red;margin-top: 10px;" id="alert"></div>
+            <br>
+            <div style="width: 100%;height: 200px;" id="map">
+                
+            </div>
+            <!-- <input type="button" value="Set map" onclick="add_turf()"> -->
+            <input type="button" value="Set map" onclick="set_turf()">
+            <input type="button" value="Close" onclick="hide_turf()">
+            <br><br>
+        </center>
+    </div>
+    <div style="width: 90%;margin: 10px auto;">
+        <img src="/static/basket_loader.gif" alt="" style="width: 100%;">
+    </div>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
+    <script>
+        var markerLat;
+        var markerLng;
+        var map = "";
+        var map_activated="no"
+        function addDraggableMarker(map, behavior, lng, lat) {
+            let markerGeo = { lng: lng, lat: lat };
+            let marker = new H.map.Marker({ lng: lng, lat: lat }, {
+                // mark the object as volatile for the smooth dragging
+                volatility: true
+            });
+            // Ensure that the marker can receive drag events
+            marker.draggable = true;
+            map.addObject(marker);
+
+            // disable the default draggability of the underlying map
+            // and calculate the offset between mouse and target's position
+            // when starting to drag a marker object:
+            map.addEventListener('dragstart', function (ev) {
+                let target = ev.target,
+                    pointer = ev.currentPointer;
+                if (target instanceof H.map.Marker) {
+                    let targetPosition = map.geoToScreen(target.getGeometry());
+                    target['offset'] = new H.math.Point(pointer.viewportX - targetPosition.x, pointer.viewportY - targetPosition.y);
+                    behavior.disable();
+
+                }
+            }, false);
+
+
+            // re-enable the default draggability of the underlying map
+            // when dragging has completed
+            map.addEventListener('dragend', function (ev) {
+                let target = ev.target;
+                //console.log(ev.currentPointer)
+                if (target instanceof H.map.Marker) {
+                    behavior.enable();
+                    let markerPosition = target.getGeometry();
+                    console.log('Marker position:', markerPosition.lng, markerPosition.lat);
+                }
+            }, false);
+
+            // Listen to the drag event and move the position of the marker
+            // as necessary
+            map.addEventListener('drag', function (ev) {
+                let target = ev.target,
+                    pointer = ev.currentPointer;
+                //console.log(pointer)
+                if (target instanceof H.map.Marker) {
+                    target.setGeometry(map.screenToGeo(pointer.viewportX - target['offset'].x, pointer.viewportY - target['offset'].y));
+                    // target.setGeometry(markerGeo);
+                    // markerLat = markerGeo.lat;
+                    // markerLng = markerGeo.lng;
+                    // console.log(markerLat, markerLng);
+                }
+            }, false);
+        }
+
+
+
+
+
+
+
+        var platform = new H.service.Platform({
+            apikey: 'fkbXhrABIi-rvwGm59zdzV-AKZCuT6hob4krss4zg4Q'
+        });
+
+        //lng: 73.073472, lat: 19.220384
+        function set_turf() {
+            if (map_activated == "no") {
+                map_activated="yes"
+                let geocoder = platform.getSearchService();
+                let area = document.getElementById("tarea").value;
+                let street = document.getElementById("tstreet").value;
+                let city = document.getElementById("tcity").value;
+                //var lat = 18.94018; var lng = 72.83484
+                let lat; let lng;
+                geocoder.geocode({
+                    q: city + ',' + street + ',' + area
+                }, function (result) {
+                    let location = result.items[0].position;
+                    console.log(location.lat + ',' + location.lng);
+                    lat = location.lat;
+                    lng = location.lng
+                    //18.94018,72.83484
+                    draw(lat, lng)
+                });
+            }
+            else{
+                //addDraggableMarker(map, behavior, lng, lat);
+                document.getElementById("map").innerHTM="";
+            }
+        }
+
+        //set_turf()
+
+        function draw(lat, lng) {
+            let defaultLayers = platform.createDefaultLayers();
+            map = new H.Map(document.getElementById('map'),
+                defaultLayers.vector.normal.map, {
+                center: { lng: lng, lat: lat },
+                zoom: 15,
+                pixelRatio: window.devicePixelRatio || 1
+            });
+            // add a resize listener to make sure that the map occupies the whole container
+            window.addEventListener('resize', () => map.getViewPort().resize());
+            let behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+
+            // Step 4: Create the default UI:
+            let ui = H.ui.UI.createDefault(map, defaultLayers, 'en-US');
+
+            // Add the click event listener.
+            addDraggableMarker(map, behavior, lng, lat);
+        }
+        function encodeImageFileAsURL() {
+            let element = document.getElementById("image");
+            let file = element.files[0];
+            let reader = new FileReader();
+            let img;
+            reader.readAsDataURL(file);
+            reader.onloadend = function () {
+                //document.write('RESULT: ', reader.result);
+                img = reader.result
+                let turf_name = document.getElementById("tname").value;
+                let game = document.getElementById("tgame").value;
+                let area = document.getElementById("tarea").value;
+                let street = document.getElementById("tstreet").value;
+                let city = document.getElementById("tcity").value;
+                let rate = document.getElementById("trate").value;
+                console.log("add_turf")
+                if (turf_name == "" || game == "" || area == "" || street == "" || city == "") {
+                    document.getElementById("alert").style.display = "block";
+                    document.getElementById("alert").innerText = "Please fill all data";
+                }
+                else {
+                    console.log("inside else")
+                    let a = check_cred("/admin", { turf_name: turf_name, game: game, area: area, street: street, city: city, user: user_mdata, img: img, rate: rate })
+                    a.then(data => {
+                        console.log(data)
+                        if (data == "done") {
+                            //document.getElementById("get_turf").style.display = "none";
+                            //load_turfs()
+                            $("#mainContainer").load("owner_page")
+                        }
+                        else {
+                            document.getElementById("alert").innerText = "Something is wrong try again";
+                        }
+                    })
+                }
+            }
+            return img
+        }
+        function add_turf() {
+            let img = encodeImageFileAsURL()
+        }
+        function hide_turf() {
+            $("#mainContainer").load("owner_page")
+        }
+        function getCity() {
+
+        }
+        function show() {
+            var platform = new H.service.Platform({
+                apikey: 'fkbXhrABIi-rvwGm59zdzV-AKZCuT6hob4krss4zg4Q'
+            });
+            var defaultLayers = platform.createDefaultLayers();
+            var map = new H.Map(document.getElementById('map'),
+                defaultLayers.vector.normal.map, {
+                center: { lng: 73.073472, lat: 19.220384 },
+                zoom: 12,
+                pixelRatio: window.devicePixelRatio || 1
+            });
+            // add a resize listener to make sure that the map occupies the whole container
+            window.addEventListener('resize', () => map.getViewPort().resize());
+            var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+
+            // Step 4: Create the default UI:
+            var ui = H.ui.UI.createDefault(map, defaultLayers, 'en-US');
+
+            // Add the click event listener.
+            addDraggableMarker(map, behavior);
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0px;
+        }
+
+        .header {
+            background-color: #2874F0;
+
+        }
+
+        .head {
+            display: grid;
+            grid-template-columns: 50% auto auto;
+        }
+        .logout{
+            background-color: #eceff1;
+            width: fit-content;
+            height: fit-content;
+            padding: 10px;
+            margin-top: 20px;
+        }
+        .search {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 80% 20%;
+            box-sizing: border-box;
+            padding: 0px;
+        }
+
+        .slides {
+            margin-top: 10px;
+            width: 100%;
+            height: 200px;
+            box-sizing: border-box;
+        }
+        .slide{
+            width: 100%;
+            height: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            animation-name: fade;
+            animation-duration: 0.5s;
+            margin-top: 0px;
+            box-sizing: border-box;
+        }
+        .slide1{
+            display: none;
+        }
+        .slide2{
+            display: none;
+        }
+        .slide3{
+            display: none;
+        }
+        .slide div{
+            position: absolute;
+            z-index: 2;
+            font-size: 15px;
+            display: inline;
+            margin-top: 30%;
+            width: 100%;
+            margin-left: 0px;
+            color: #ffffff;
+            box-sizing: border-box;
+        }
+        @keyframes fade{
+            from{opacity: 0%;}
+            to{opacity: 1000%;}
+        }
+        
+        
+        
+        .Dcontainer{
+
+        }
+        .hot{
+            width: 100%;
+            background-color:  #eceff1;
+            font-size: 15px;
+        }
+        .hots{
+            font-size: 20px;
+            margin-left: 10px;
+            display: grid;
+            grid-template-columns: 10% auto;
+        }
+        .hots img{
+            width: 100%;
+        }
+        .hots div{
+            margin-left: 5px;
+            margin-top: 5px;
+        }
+
+        .container {
+            width: 100%;
+            display: grid;
+            column-gap: 15%;
+            row-gap: 10px;
+            grid-template-columns: 40% 40%;
+            background-color: white;
+            padding: 20px;
+            box-sizing: border-box;
+            height: fit-content;
+
+        }
+
+        .card {
+            width: 100%;
+            background-color: aliceblue;
+            padding: 10px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+        .may{
+            display: flex;
+            overflow: auto;
+            background-color: red;
+        }
+        .mcard{
+            width: 40%;
+            display: inline-block;
+            background-color: none;
+            padding-left: 30px;
+            padding-top: 10px;
+        }
+        
+        .acontainer .card{
+            background-color: #74a6f6;
+        }
+
+        .scon .card{
+            width: 40%;
+            display: inline-block;
+        }
+        .scon{
+            display: flex;
+            overflow: auto;
+        }
+    </style>
+</head>
+
+
+<body>
+    
+
+    <div class="master_panel">
+        <div class="header">
+            <div class="head">
+                <!-- <div style="text-align: left;margin: 10px 0px 10px 20px;width: 50%;"><img src="/static/turf_logo.png" alt="" style="width: 100%;"></div>
+                <div class="login" style="float: right;margin: 10px 0px 10px 120px;width: 100%;" onclick="$('#mainContainer').load('myOrders')">
+                    <div style="background-color: aliceblue;width: fit-content;padding: 10px;">My orders</div>
+                </div>
+                <div class="login" style="float: right;margin: 10px 0px 10px 120px;" onclick="$('#mainContainer').load('myOrders')">
+                    <div style="background-color: aliceblue;width: fit-content;padding: 10px;">Logout</div>
+                </div> -->
+                <div style="text-align: left;margin: 10px 0px 10px 20px;width: 50%;"><img src="/static/turf_logo.png" alt="" style="width: 100%;"></div>
+                <div class="logout" onclick="$('#mainContainer').load('myOrders')">My Orders</div>
+                <div class="logout" onclick="$('#mainContainer').load('loginPage')">Logout</div>
+            </div>
+            <div class="search">
+                <div style="background-color: none;width: 100%;padding:10px;">
+                    <input type="search" style="width: 90%;font-size: 25px;display: block;margin: 0px auto;" placeholder="Search" id="search">
+                </div>
+                <div style="background-color: none;width: 100%;padding-top:10px ;">
+                    <button style="width: fit-content;padding:5px;height: fit-content;display: block;margin: 2.5px auto;" onclick="Search()">Search</button>
+                </div>
+            </div>
+        </div>
+        <div class="slides">
+            <div class="slide1 slide" style="background-color: none;" id=1>
+                <div class="left" style="width: fit-content;">Unlock your skills<br>with sports</div>
+                <img src="{{ url_for('static',filename='football_image.jpeg') }}" alt="" width="100%" height="100%">
+                <!-- <div class="right">&gt</div> -->
+            </div>
+            <div class="slide2 slide" style="background-color: none;" id=2>
+                <div class="left" style="color: wheat; font-size: 20px; margin-top: 35%; width: fit-content;box-sizing: border-box;">Make new Friends</div>
+                <img src="{{ url_for('static',filename='vollyball_image.jpg') }}" alt="" width="100%" height="100%">
+            </div>
+            <div class="slide3 slide" style="background-color: none;" id=3>
+                <img src="{{ url_for('static',filename='golf_ball_slide.jpg') }}" alt="" width="100%" height="100%">
+            </div>
+        </div>
+
+        <div class="hot" style="background-color: #f2f2f2;">
+            <div class="hots" >
+                <img src="{{ url_for('static',filename='hot1.png') }}" alt="">
+                <!-- <img src="images/hot1.png" alt=""> -->
+                <div>
+                    You may like this
+                </div>
+            </div>
+            <div class="may" style="background-color: #ffffff;">
+                
+                <div class="cricket mcard" onclick="qSearch('Badminton')">
+                    <img src="{{ url_for('static',filename='badminton.jpg') }}" alt="" style="width: 100%;">
+                    <!-- <img src="images/badminton.jpg" alt="" style="width: 100%;"> -->
+                    <div style="text-align: center;width: 100%;">Badminton</div>
+                </div>
+                <div class="Football mcard" onclick="qSearch('Hockey')">
+                    <img src="{{ url_for('static',filename='hockey.jpg') }}" alt="" style="width: 100%;">
+                    <!-- <img src="images/hockey.jpg" alt="" style="width: 100%;"> -->
+                    <div style="text-align: center;width: 100%;">Hockey</div>
+                </div>
+                <div class="Football mcard" onclick="qSearch('Basketball')">
+                    <img src="{{ url_for('static',filename='basketball.webp') }}" alt="" style="width: 100%";>
+                    <!-- <img src="images/basketball.webp" alt="" style="width: 100%;"> -->
+                    <div style="text-align: center;width: 100%;">Basketball</div>
+                </div>
+                <div class="Football mcard" onclick="qSearch('Dodgeball')">
+                    <img src="{{ url_for('static',filename='dodgeball.jpg') }}" alt="" style="width: 100%;">
+                    <!-- <img src="images/dodgeball.jpg" alt="" style="width: 100%;"> -->
+                    <div style="text-align: center;width: 100%;">Dodgeball</div>
+                </div>
+                <div class="Football mcard" onclick="qSearch('Dodgeball')">
+                    <img src="{{ url_for('static',filename='golf.jpg') }}" alt="" style="width: 100%;">
+                    <!-- <img src="images/dodgeball.jpg" alt="" style="width: 100%;"> -->
+                    <div style="text-align: center;width: 100%;">Dodgeball</div>
+                </div>
+            
+            </div>
+        </div>
+        <br>
+        <div class="hot">
+            <div class="hots">
+                <img src="{{ url_for('static',filename='hot1.png') }}" alt="">
+                <!-- <img src="images/hot1.png" alt="" style=""> -->
+                <div>
+                    Hot
+                </div>
+            </div>
+            <div class="container">
+                <div class="cricket card" onclick="qSearch('Cricket')">
+                    <img src="{{ url_for('static',filename='cricket_card_image.avif') }}" alt="" style="width: 100%;">
+                    <!-- <img src="images/cricket_card_image.avif" alt="" style="width: 100%;"> -->
+                    <div style="text-align: center;width: 100%;">Cricket</div>
+                </div>
+                <div class="Football card" onclick="qSearch('Football')">
+                    <img src="{{ url_for('static',filename='football_card_image.jpg') }}" alt="" style="width: 100%;">
+                    <!-- <img src="images/football_card_image.jpg" alt="" style="width: 100%;"> -->
+                    <div style="text-align: center;width: 100%;">Football</div>
+                </div>
+                <div class="Vollyball card" onclick="qSearch('Vollyball')">
+                    <img src="{{ url_for('static',filename='vollyball_card_image.jpg') }}" alt="" style="width: 100%;">
+                    <!-- <img src="images/vollyball_card_image.jpg" alt="" style="width: 100%;"> -->
+                    <div style="text-align: center;width: 100%;">Vollyball</div>
+                </div>
+                <div class="kabaddi card" onclick="qSearch('kabaddi')">
+                    <img src="{{ url_for('static',filename='kabaddi.jpg') }}" alt="" style="width: 100%;">
+                    <!-- <img src="images/kabaddi.jpg" alt="" style="width: 100%;"> -->
+                    <div style="text-align: center;width: 100%;">kabaddi</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="hot" style="background-color: #74a6f6;">
+            <div class="hots" >
+                <img src="{{ url_for('static',filename='hot1.png') }}" alt="">
+                <!-- <img src="images/hot1.png" alt=""> -->
+                <div>
+                    Apni Mitti
+                </div>
+            </div>
+            <div class="container acontainer" style="background-color: #adccfd;">
+                <div class="cricket card" onclick="qSearch('kabaddi')">
+                    <img src="{{ url_for('static',filename='kabaddi.jpg') }}" alt="" style="width: 100%;">
+                    <!-- <img src="images/kabaddi1.jpg" alt="" style="width: 100%;"> -->
+                    <div style="text-align: center;width: 100%;">Kabaddi</div>
+                </div>
+                <div class="Football card" onclick="qSearch('kho-kho')">
+                    <img src="{{ url_for('static',filename='kho-kho.jpg') }}" alt="" style="width: 100%;">
+                    <!-- <img src="images/kho-kho.jpg" alt="" style="width: 100%;"> -->
+                    <div style="text-align: center;width: 100%;">kho-kho</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="hot" style="background-color: #f2f2f2;">
+            <div class="hots" >
+                <img src="{{ url_for('static',filename='hot1.png') }}" alt="">
+                <!-- <img src="images/hot1.png" alt=""> -->
+                <div>
+                    Other games
+                </div>
+            </div>
+            <div class="scon" style="background-color: #adccfd;">
+                <div class="cricket card" onclick="qSearch('Badminton')">
+                    <img src="{{ url_for('static',filename='badminton.jpg') }}" alt="" style="width: 100%;">
+                    <!-- <img src="images/badminton.jpg" alt="" style="width: 100%;"> -->
+                    <div style="text-align: center;width: 100%;">Badminton</div>
+                </div>
+                <div class="Football card" onclick="qSearch('Hockey')">
+                    <img src="{{ url_for('static',filename='hockey.jpg') }}" alt="" style="width: 100%;">
+                    <!-- <img src="images/hockey.jpg" alt="" style="width: 100%;"> -->
+                    <div style="text-align: center;width: 100%;">Hockey</div>
+                </div>
+                <div class="Football card" onclick="qSearch('Basketball')">
+                    <img src="{{ url_for('static',filename='basketball.webp') }}" alt="" style="width: 100%;">
+                    <!-- <img src="images/basketball.webp" alt="" style="width: 100%;"> -->
+                    <div style="text-align: center;width: 100%;">Basketball</div>
+                </div>
+                <div class="Football card" onclick="qSearch('Football')">
+                    <img src="{{ url_for('static',filename='football_card_image.jpg') }}" alt="" style="width: 100%;">
+                    <!-- <img src="images/football_card_image.jpg" alt="" style="width: 100%;"> -->
+                    <div style="text-align: center;width: 100%;">Football</div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <script lang="javascript">
+        function qSearch(q){
+            query=q
+            let a=check_cred("Search_turf",{turf:q})
+            a.then(data=>{
+                //console.log(data)
+                data=JSON.parse(data)
+                search_q=data
+                $("#mainContainer").load("searchPage")
+            })
+        }
+        changeSlide()
+        function Search(){
+            let query=document.getElementById("search").value
+            qSearch(query)
+        }
+        
+        function changeSlide(){
+            //console.log(index)
+            if(index=="slide1"){
+                document.getElementById(1).style.display="block";
+                document.getElementById(2).style.display="none";
+                document.getElementById(3).style.display="none";
+                index="slide2"
+            }
+            else if(index=="slide2"){
+                document.getElementById("1").style.display="none";
+                document.getElementById("2").style.display="block";
+                document.getElementById("3").style.display="none";
+                index="slide3"
+            }
+            else if(index=="slide3"){
+                document.getElementById("1").style.display="none";
+                document.getElementById("2").style.display="none";
+                document.getElementById("3").style.display="block";
+                index="slide1"
+            }
+            setTimeout(changeSlide, 5000)
+        }
+
+        // function Search(){
+        //     console.log("Search")
+        //     let query=document.getElementById("search").value
+        //     let a=check_cred("search",{query:query})
+        //     a.then(data=>{
+        //         console.log(data)
+        //     })
+        // }
+
+
+    </script>
+
+    
+</body>
+
+</html>

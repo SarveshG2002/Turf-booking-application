@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <style>
+      #myImage {
+        width: 200px;
+        height: 200px;
+        animation: flip 0.5s linear 1;
+      }
+
+      @keyframes flip {
+        0% {
+          transform: rotateY(0deg);
+        }
+        50% {
+          transform: rotateY(180deg);
+        }
+        100% {
+          transform: rotateY(0deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <img id="myImage" src="img_paris.jpg">
+  </body>
+</html>

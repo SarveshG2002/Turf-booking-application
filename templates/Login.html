@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<style>
+    body {
+    }
+
+    .loginbox {
+        padding: 20px;
+        width: 90%;
+        margin: 150px auto;
+    }
+
+    .cir {
+        display: inline;
+    }
+
+    .cir1 {
+        width: 30%;
+        padding: 25% 30%;
+        background-color: rgb(2, 70, 2);
+        border-radius: 50%;
+        margin-top: -100px;
+    }
+
+    .cir2 {
+        position: absolute;
+        z-index: 1;
+        width: 30%;
+        padding: 40% 25%;
+        background-color: rgb(122, 255, 113);
+        border-radius: 50%;
+        margin-top: -100px;
+        margin-left: -100px;
+    }
+
+    .loginbox input {
+        font-size: 30px;
+        width: 90%;
+        margin: 20px auto;
+        border-radius: 10px;
+        padding: 10px;
+
+        border-width: 0px 0px 1px 0px;
+        border-color: black;
+    }
+
+    .loginbox input:hover {
+        background-color: #abffaf;
+    }
+
+    .img img {
+        width: 50%;
+    }
+
+    .sub {
+        width: 50%;
+        padding: 5px;
+        background-color: #1b5e20;
+        margin: 20px auto;
+        font-size: 30px;
+        text-align: center;
+        border-radius: 20px;
+    }
+
+    .sub:active {
+        background-color: #43a047;
+    }
+
+    .rad_box input {
+        width: 10%;
+        border: 0px;
+        height: 1em;
+        margin-bottom: 0px;
+    }
+</style>
+
+<body>
+    <div class="main">
+        <div class="cir1 cir">
+
+        </div>
+        <div class="cir2 cir">
+
+        </div>
+        <div class="loginbox">
+            <div class="img">
+                <center>
+                    <img src="{{ url_for('static',filename='5087579.png') }}" alt="">
+                </center>
+            </div>
+            <input type="text" placeholder="Enter id" id="uid">
+            <input type="text" name="" id="pass" placeholder="Enter password">
+            <div class="rad_box">
+                <input type="radio" id="use1" name="usecase" value="user" class="rad">
+                <label for="age1"
+                    style="font-size: 30px;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">I'm
+                    owner</label><br>
+                <input type="radio" id="use2" name="usecase" value="owner" class="rad">
+                <label for="age2"
+                    style="font-size: 30px;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">I'm
+                    user</label><br>
+            </div>
+            <br>
+            <center>
+                <a href="">Forget password</a><br>
+                <a onclick="load_signup()" style="border: #1b5e20;border-width: 0px 0px 1px 0px;border-style: ridge;">Don't gave account || Signu up</a>
+
+            </center>
+            <div class="alert" style="display: none; text-align: center; color: red;margin-top: 10px;" id="alert">
+            </div>
+            <div class="sub" onclick="submit()">
+                Submit
+            </div>
+        </div>
+    </div>
+    <script>
+        function submit() {
+            let id = document.getElementById("uid").value;
+            let pass= document.getElementById("pass").value;
+            let ele = document.getElementsByName("usecase");
+            let user = ""
+            console.log(ele)
+            if (ele[0].checked) {
+                console.log("owner")
+                user = "owner"
+            }
+            else if (ele[1].checked) {
+                console.log("user")
+                user = "users"
+            }
+            else if (id == "" || pass == "" || user=="") {
+                document.getElementById("alert").style.display = "block";
+                document.getElementById("alert").innerText = "Please enter above information";
+            }
+            if (user!="") {
+                let site = "owner_page";
+                let a = check_cred("/login/", { mail: id, pass: pass ,user:user})
+                a.then(data=>{
+                    data=JSON.parse(data)
+                    console.log("data from login: ",data['ret'][0][0],data)
+                    if(data['ret']=="not match"){
+                        document.getElementById("alert").style.display = "block";
+                        document.getElementById("alert").innerText = "ID Doesn't exist";
+                    }
+                    else{
+                        user_mdata={name:data['ret'][0][0],mail:data['ret'][0][1],mobile:data['ret'][0][2],user:user}
+                        if(user=="users"){
+                            $("#mainContainer").load("user")
+                        }
+                        else{
+                            $("#mainContainer").load("owner_page")
+                        }
+                        
+                    }  
+                })
+                
+
+            }
+            //<img src="{{ url_for('static',filename='5087579.png') }}">
+        }
+        function load_signup() {
+            $("#mainContainer").load("sign_owner")
+        }
+    </script>
+</body>
+
+</html>

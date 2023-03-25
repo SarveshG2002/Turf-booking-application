@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0px;
+            background-color: rgb(179, 112, 241);
+        }
+
+        .card {
+            background-color: aliceblue;
+            padding: 10px;
+            box-sizing: border-box;
+            width: 90%;
+            margin: 25px auto;
+            border-radius: 10px;
+        }
+
+        .c {
+            background-color: aliceblue;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            padding: 10px;
+            box-sizing: border-box;
+            margin-top: 10px;
+        }
+
+        .c input {
+            width: 90%;
+            border-width: 0px 0px 1px 0px;
+            background: none;
+            font-size: 25px;
+        }
+
+        .update {
+            width: fit-content;
+            background-color: blueviolet;
+            padding: 10px;
+            color: aliceblue;
+            border-radius: 5px;
+            margin: 20px auto 0px auto;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        }
+
+        .head {
+            /* background-color: aliceblue; */
+            width: 95%;
+            margin-top: 10px;
+        }
+
+        .back {
+            width: 50px;
+        }
+        label{
+            color: grey;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="head">
+        <div class="back" onclick="$('#mainContainer').load('owner_page')">
+            <img src="/static/back_arraow.png" alt="" style="width: 100%;">
+        </div>
+    </div>
+    <div class="card">
+        <div class="c">
+            <label for="name">Name</label>
+            <center>
+                <input type="text" id="name">
+            </center>
+        </div>
+        <div class="c">
+            <label for="mail">Mail</label>
+            <center>
+                <input type="text" id="mail">
+            </center>
+        </div>
+        <div class="c">
+            <label for="mobile">Mobile number</label>
+            <center>
+                <input type="text" id="mobile">
+            </center>
+        </div>
+        <div class="c">
+            <label for="pass">Password</label>
+            <center>
+                <input type="text" id="pass">
+            </center>
+        </div>
+        <div class="c">
+            <label for="gpay">Gpay number</label>
+            <center>
+                <input type="text" id="gpay">
+            </center>
+        </div>
+        <div class="c">
+            <label for="phonepe">Phone pay</label>
+            <center>
+                <input type="text" id="phonepe">
+            </center>
+        </div>
+        <div class="c">
+            <label for="paytm">Paytm</label>
+            <center>
+                <input type="text" id="paytm">
+            </center>
+        </div>
+        <div class="update" onclick="update_owner()">
+            Update
+        </div>
+    </div>
+    <script>
+        function getOwnerData() {
+
+            let tempdata = { mail: user_mdata["mail"] }
+            console.log(tempdata)
+            let a = check_cred("getOwnerData", { mail: user_mdata["mail"] })
+            a.then(data => {
+                data = JSON.parse(data)["ret"][0]
+                console.log(data)
+                document.getElementById("name").value = data[0]
+                document.getElementById("mail").value = data[1]
+                document.getElementById("mobile").value = data[2]
+                document.getElementById("pass").value = data[3]
+                document.getElementById("gpay").value = data[4]
+                document.getElementById("phonepe").value = data[5]
+                document.getElementById("paytm").value = data[6]
+            })
+        }
+        function update_owner() {
+            let name=document.getElementById("name").value
+            let mail=document.getElementById("mail").value
+            let mobile=document.getElementById("mobile").value
+            let pass=document.getElementById("pass").value
+            let gpay=document.getElementById("gpay").value
+            let phonepe=document.getElementById("phonepe").value
+            let paytm=document.getElementById("paytm").value
+            let tempData=[name,mail,mobile,pass,gpay,phonepe,paytm]
+            let a=check_cred("update_owner",{mail:user_mdata["mail"],udata:tempData})
+            a.then(data=>{
+                if(data=="done"){
+                    $('#mainContainer').load('owner_page')
+                }
+            })
+        }
+        getOwnerData()
+    </script>
+</body>
+
+</html>

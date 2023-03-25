@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            margin: 0px;
+        }
+        .panel{
+            width: 100%;
+            background-image: linear-gradient(#5557da, #acadf1);
+            padding: 10px;
+            border-radius: 25px;
+            box-sizing: border-box;
+        }
+        .header{
+            /* background-color: antiquewhite; */
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: 10% 80% 10%;
+        }
+        .total{
+            width: 100%;
+            font-size: 25px;
+            text-align: center;
+            margin-top: 5px;
+        }
+        .turfs{
+            width: 100%;
+            padding-top: 30px;
+        }
+        .turf{
+            margin-top: 10px;
+            display: grid;
+            grid-template-columns: 15% auto;
+            width: 100%;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 6px -6px #777;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .turfname{
+            width: 100%;
+        }
+        .name{
+            font-size: 25px;
+            margin-left: 10px;
+            color: #5b5a5a;
+        }
+        .game{
+            font-size: 20px;
+            margin-left: 10px;
+            color: #5b5a5a;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="panel">
+        <div class="header">
+            <div class="back" onclick="$('#mainContainer').load('owner_page')">
+                <img src="/static/back_arraow.png" alt="" style="width: 100%;">
+            </div>
+            <div class="total" id="total">
+            </div>
+            <div class="empty" onclick="$('#mainContainer').load('add_turf_page')">
+                <img src="/static/add.png" alt="" style="width: 100%;background-color: #bebebe;border-radius: 50%;">
+            </div>
+        </div>
+        <div class="turfs" id="turfs">
+            
+        </div>
+        <div class="footer" style="width: 100%;padding: 30px;box-sizing: border-box;">
+        </div>
+    </div>
+    <script>
+        function load(){
+            let a = check_cred("/get_turf", {mail: user_mdata["mail"],mobile:user_mdata["mobile"]})
+            a.then(data=>{
+                data=JSON.parse(data)["ret"]
+                console.log(data)
+                markup=""
+                document.getElementById("total").innerHTML=data.length+" turfs"
+                for(let x=0;x<data.length;x++){
+                    markup=markup+"<div class='turf'><img src='/static/5087579.png' style='width: 100%;''><div class='turfname'><div class='name'>"+data[x][0]+"</div><div class='game'>"+data[x][1]+"</div></div></div>"
+                }
+                document.getElementById("turfs").innerHTML=markup
+            })
+        }
+        load()
+    </script>
+</body>
+
+</html>

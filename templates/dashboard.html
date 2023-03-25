@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <style>
+        * {
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        }
+
+        body {
+            background-color: #ffffff;
+            margin: 0px;
+        }
+
+        .header {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            background-color: #ffffff;
+            display: grid;
+            grid-template-columns: 10% 80% 10%;
+        }
+
+        .header_title {
+            text-align: center;
+            font-size: 25px;
+        }
+
+        .center_bar {
+            /* background-color: #e50404; */
+            width: 100%;
+            padding: 10px 0px 10px 0px;
+        }
+
+        .total {
+            width: 100%;
+            /* background-color: aqua; */
+            font-size: 45px;
+            text-align: center;
+
+            padding-top: 20px;
+        }
+
+        .totalline {
+            width: 100%;
+            text-align: center;
+            padding: 0px;
+        }
+
+        .center_footer {
+            width: 100%;
+            /* background-color: blueviolet; */
+            display: grid;
+            grid-template-columns: 50% 50%;
+            margin-top: 20px;
+        }
+
+        .total_order {
+            font-size: 45px;
+            text-align: center;
+        }
+
+        .chart_bar {
+            width: 100%;
+            border-radius: 10px;
+            margin: 20px 0px;
+            background-color: aliceblue;
+            padding: 10px 0px;
+        }
+
+        .filter {
+            margin: 10px 0px;
+            text-align: center;
+
+        }
+
+        .myChart {
+            background-color: white;
+        }
+
+        .tcard {
+            width: 90%;
+            background-color: #ffffff;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            margin: 10px auto;
+            display: grid;
+            grid-template-columns: 80% 20%;
+            padding: 10px;
+            box-sizing: border-box;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="back" onclick="$('#mainContainer').load('owner_page')">
+            <img src="/static/back_arraow.png" alt="" style="width: 100%;">
+        </div>
+        <div class="header_title" id="header_title">
+            Income
+        </div>
+        <div></div>
+    </div>
+    <div class="center_bar">
+        <div class="total" id="total">
+            15000
+        </div>
+        <div class="totalline">
+            Total income
+        </div>
+        <div class="center_footer">
+            <div class="left">
+                <div class="total_order" id="total_orders">
+                    49
+                </div>
+                <div style="width: 100%;text-align: center;">
+                    Total Orders
+                </div>
+            </div>
+
+            <div class="left">
+                <div class="total_order" id="today_inc">
+                    700
+                </div>
+                <div style="width: 100%;text-align: center;">
+                    Todays Income
+                </div>
+            </div>
+        </div>
+        <div class="chart_bar">
+            <div class="filter">
+                <label for="filters">Filters</label>
+                <select name="filters" id="filters" onchange="set_graph()">
+                    <option value="All">All</option>
+                    <option value="7">Last 7 days</option>
+                    <option value="10">Last 10 days</option>
+                    <option value="30">Last 30 days</option>
+                </select>
+            </div>
+            <canvas class="myChart" id="myChart" style="width:100%"></canvas>
+        </div>
+
+        <div class="turf_income" id="turf_income">
+            <div class="tcard">
+                <div class="name">
+                    Turf name
+                </div>
+                <div class="income">
+                    Income
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <script>
+        function draw_chart(rate, dates) {
+            // var xValues = [50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150];
+            // var yValues = [7, 8, 8, 9, 9, 9, 10, 11, 14, 14, 15];
+            let max = Math.ceil(Math.max.apply(Math, rate))
+            new Chart("myChart", {
+                type: "line",
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        fill: false,
+                        lineTension: 0,
+                        backgroundColor: "rgba(0,0,255,1.0)",
+                        borderColor: "rgba(0,0,255,0.1)",
+                        data: rate
+                    }]
+                },
+                options: {
+                    legend: { display: false },
+                    scales: {
+                        yAxes: [{ ticks: { min: 100, max: max } }],
+                    }
+                }
+            });
+        }
+        function set_today_income() {
+            let rate = user_orders["rate"]
+            let dates = user_orders["dates"]
+            // for (let i = rate.length - 1; i > a; i--) {
+            //     console.log(a[j])
+            // }
+            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const today = new Date();
+            const day = today.getDate();
+            const month = months[today.getMonth()].slice(0, 3);
+            const year = today.getFullYear();
+            const formattedDate = `${day} ${month} ${year}`;
+
+            console.log(formattedDate);
+            const date = new Date(formattedDate);
+            // let cdate = [formattedDate
+            let crate = []
+            let formattedDates = dates.map(date => {
+                let [day, month, year] = date.trim().split(' ');
+                return `${Number(day)} ${month} ${year}`;
+            });
+            // console.log(formattedDates)
+            // console.log(formattedDate)
+            if (formattedDates.includes(formattedDate)) {
+                //console.log(`${cdate[i]} is in the list of dates`);
+                //console.log(formattedDates.includes(formattedDate))
+                document.getElementById("today_inc").innerHTML = rate[formattedDates.indexOf(formattedDate)].toFixed(2);
+
+            } else {
+                //console.log(`${cdate[i]} is not in the list of dates`);
+                document.getElementById("today_inc").value = "0"
+            }
+
+        }
+        function set_turfs_income(turfs, turf_rate) {
+            let a = check_cred("get_turf", { mail: user_mdata["mail"], mobile:user_mdata["mobile"]})
+            a.then(data => {
+                data = JSON.parse(data)["ret"]
+                console.log(data)
+                for(let i=0;i<data.length;i++){
+                    if(turfs.includes(data[i][0])){
+
+                    }
+                    else{
+                        turfs.push(data[i][0])
+                        turf_rate.push(0)
+                    }
+                }
+                let markup = "<div class='tcard'><div class='name'>Turf name</div><div class='income'>Income</div></div>"
+                for (let i = 0; i < turfs.length; i++) {
+                    markup = markup + "<div class='tcard'><div class='name'>" + turfs[i] + "</div><div class='income'>" + turf_rate[i].toFixed(2) + "</div></div>"
+                }
+                document.getElementById("turf_income").innerHTML = markup
+            })
+
+
+        }
+        function get_income_data() {
+            let a = check_cred("get_income_data", { mail: user_mdata["mail"] })
+            a.then(data => {
+                //console.log(data)
+                data = JSON.parse(data)["ret"]
+                let rate = []
+                let total = 0
+                let dates = []
+                let date
+                let temp
+                let turfs = []
+                let turf_rate = []
+                // console.log(data.length)
+                for (let i = 0; i < data.length; i++) {
+                    // console.log(data[i][0])
+                    // rate.push(data[i][0])
+                    date = data[i][1]
+                    date = date.slice(4, 16)
+                    if (dates.includes(date)) {
+                        temp = dates.indexOf(date)
+                        rate[temp] = rate[temp] + parseFloat(data[i][0])
+                    }
+                    else {
+                        dates.push(date)
+                        rate.push(parseFloat(data[i][0]))
+                    }
+                    if (turfs.includes(data[i][2])) {
+                        temp = turfs.indexOf(data[i][2])
+                        turf_rate[temp] = turf_rate[temp] + parseFloat(data[i][0])
+                    }
+                    else {
+                        turfs.push(data[i][2])
+                        turf_rate.push(parseFloat(data[i][0]))
+                    }
+                    set_turfs_income(turfs, turf_rate)
+                    total = total + parseFloat(data[i][0])
+                }
+                document.getElementById("total").innerHTML = total.toFixed(2)
+                document.getElementById("total_orders").innerHTML = data.length
+                //set_today_income()
+
+
+
+                // console.log(total)
+                // console.log(data.length)
+                // console.log(rate)
+                // console.log(dates)
+                // console.log(data)
+                user_orders["rate"] = rate
+                user_orders["dates"] = dates
+                draw_chart(rate, dates)
+            })
+        }
+        function set_graph() {
+            let a = document.getElementById("filters").value
+            if (a == "All") {
+                get_income_data()
+            }
+            else {
+                let rate = user_orders["rate"]
+                let dates = user_orders["dates"]
+                // for (let i = rate.length - 1; i > a; i--) {
+                //     console.log(a[j])
+                // }
+                const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                const today = new Date();
+                const day = today.getDate();
+                const month = months[today.getMonth()].slice(0, 3);
+                const year = today.getFullYear();
+                const formattedDate = `${day} ${month} ${year}`;
+                console.log(formattedDate);
+                const date = new Date(formattedDate);
+                let cdate = [formattedDate]
+                let crate = []
+                // Loop through the previous 7 days
+                for (let i = 1; i < parseInt(a); i++) {
+                    // Calculate the previous day by subtracting the number of milliseconds in a day
+                    const prevDate = new Date(date.getTime() - (i * 24 * 60 * 60 * 1000));
+                    // Format the date as a string in the desired format
+                    const prevDateString = prevDate.getDate() + ' ' + prevDate.toLocaleString('default', { month: 'short' }) + ' ' + prevDate.getFullYear();
+                    // Output the previous date
+                    //console.log(prevDateString);
+                    cdate.push(prevDateString)
+                }
+                console.log(cdate)
+                let formattedDates = dates.map(date => {
+                    let [day, month, year] = date.trim().split(' ');
+                    return `${Number(day)} ${month} ${year}`;
+                });
+                //formattedDates.reverse()
+                console.log(formattedDates)
+                for (let i = 0; i < cdate.length; i++) {
+                    let [day, month, year] = cdate[i].split(' ');
+                    cdate[i] = `${Number(day)} ${month} ${year}`;
+
+                    if (formattedDates.includes(cdate[i])) {
+                        //console.log(`${cdate[i]} is in the list of dates`);
+                        crate.push(rate[formattedDates.indexOf(cdate[i])])
+                    } else {
+                        //console.log(`${cdate[i]} is not in the list of dates`);
+                        crate.push(0)
+                    }
+                }
+                crate.reverse()
+                cdate.reverse()
+                console.log(crate)
+                draw_chart(crate, cdate)
+            }
+
+        }
+        get_income_data()
+    </script>
+</body>
+
+</html>

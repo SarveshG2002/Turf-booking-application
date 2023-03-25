@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            margin: 0px;
+        }
+        .panel{
+            width: 100%;
+            background-image: linear-gradient(#5557da, #acadf1);
+            padding: 10px;
+            border-radius: 25px;
+            box-sizing: border-box;
+        }
+        .header{
+            /* background-color: antiquewhite; */
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: 10% 80% 10%;
+        }
+        .total{
+            width: 100%;
+            font-size: 25px;
+            text-align: center;
+            margin-top: 5px;
+        }
+        .turfs{
+            width: 100%;
+            padding-top: 30px;
+        }
+        .request{
+            width: 100%;
+            background-color: aliceblue;
+            padding: 10px;
+            box-sizing: border-box;
+            color: grey;
+            border-radius: 5px;
+        }
+        .tname{
+            font-size: 25px;
+        }
+        .gname{
+            margin-top: 10px;
+        }
+        .request_detail{
+            border-width: 1px;
+            border-style: ridge;
+            border-color: #acadf1;
+            margin-top: 10px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .buttons{
+            margin: 10px auto;
+            width: fit-content;
+        }
+        .but{
+            display: inline-block;
+            padding: 10px;
+            box-sizing: border-box;
+            color: black;
+            border-radius: 5px;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="panel">
+        <div class="header">
+            <div class="back" onclick="$('#mainContainer').load('owner_page')">
+                <img src="/static/back_arraow.png" alt="" style="width: 100%;">
+            </div>
+            <div class="total" id="total">
+            </div>
+            <div class="empty" onclick="$('#mainContainer').load('add_turf_page')">
+                <img src="/static/add.png" alt="" style="width: 100%;background-color: #bebebe;border-radius: 50%;">
+            </div>
+        </div>
+        <div class="turfs" id="turfs">
+            <div class="request">
+                <div class="tname">
+                    Vadapav cricket club
+                </div>
+                <div class="gname">
+                    Football 500$
+                </div>
+                <div class="request_detail">
+                    Requested by
+                    <div class="rname" style="margin-top: 5px;">
+                        Sarvesh sanjay gandhere
+                    </div>
+                    <div class="date" style="margin-top: 5px;">
+                        2023-02-26
+                    </div>
+                </div>
+                <div class="buttons">
+                    <div class="but accept" style="background-color: rgb(67, 180, 67);">
+                        Accept
+                    </div>
+                    <div class="but reject" style="background-color: rgb(208, 87, 87);">
+                        Reject
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer" style="width: 100%;padding: 30px;box-sizing: border-box;">
+        </div>
+    </div>
+    <script>
+        function load(){
+            let a = check_cred("/get_requests", {mail: user_mdata["mail"]})
+            a.then(data=>{
+                data=JSON.parse(data)["ret"]
+                console.log(data)
+                request_data=data
+                markup=""
+                for(let x=0;x<data.length;x++){
+                    markup=markup+"<div class='request'><div class='tname'>"+data[x][0]+"</div><div class='gname'>"+data[x][0]+" "+data[x][5]+"</div><div class='request_detail'>Requested by<div class='rname' style='margin-top: 5px;'>"+data[x][11]+"</div><div class='date' style='margin-top: 5px;'>"+data[x][6]+"-"+data[x][7]+"-"+data[x][8]+"</div></div><div class='buttons'><div class='but accept' style='background-color: rgb(67, 180, 67);' onclick='accept("+x+")'>Accept</div><div class='but reject' style='background-color: rgb(208, 87, 87);' onclick='reject("+x+")'>Reject</div></div></div>"
+
+                }
+                document.getElementById("turfs").innerHTML=markup
+            })
+        }
+        function accept(i){
+            let tname=request_data[i][0]
+            let tgame=request_data[i][1]
+            let omail=request_data[i][2]
+            let umail=request_data[i][3]
+            let city=request_data[i][4]
+            let rate=request_data[i][5]
+            let year=request_data[i][6]
+            let month=request_data[i][7]
+            let day=request_data[i][8]
+            let stime=request_data[i][9]
+            let etime=request_data[i][10]
+            console.log({tname:tname,tgame:tgame,omail:omail,umail:umail,city:city,rate:rate,year:year,month:month,day:day,stime:stime,etime:etime})
+            let a=check_cred("/accept",{tname:tname,tgame:tgame,omail:omail,umail:umail,city:city,rate:rate,year:year,month:month,day:day,stime:stime,etime:etime})
+            a.then(data=>{
+                console.log(data)
+                if(data=="done"){
+                    $("mainContainer").load("owner_page")
+                }
+            })
+        }
+        function reject(i){
+            console.log()
+            let tname=request_data[i][0]
+            let tgame=request_data[i][1]
+            let omail=request_data[i][2]
+            let umail=request_data[i][3]
+            let city=request_data[i][4]
+            let rate=request_data[i][5]
+            let year=request_data[i][6]
+            let month=request_data[i][7]
+            let day=request_data[i][8]
+            let stime=request_data[i][9]
+            let etime=request_data[i][10]
+            console.log({tname:tname,tgame:tgame,omail:omail,umail:umail,city:city,rate:rate,year:year,month:month,day:day,stime:stime,etime:etime})
+            let a=check_cred("/reject",{tname:tname,tgame:tgame,omail:omail,umail:umail,city:city,rate:rate,year:year,month:month,day:day,stime:stime,etime:etime})
+            a.then(data=>{
+                console.log(data)
+                $("mainContainer").load("owner_page")
+            })
+        }
+        load()
+    </script>
+</body>
+
+</html>
